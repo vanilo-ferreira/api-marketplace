@@ -14,7 +14,8 @@ rotas.post('/login', login.login);
 //Filtro para verificar usuário logado
 rotas.use(verificarLogin);
 
-//Obter perfil do usuário logado
+//Obter e Atualizar perfil do usuário logado
 rotas.get('/perfil', usuarios.obterPerfil);
+rotas.put('/perfil', usuarios.atualizarPerfil);
 
 module.exports = rotas;
