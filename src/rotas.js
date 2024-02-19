@@ -22,5 +22,6 @@ rotas.put('/perfil', usuarios.atualizarPerfil);
 //CRUD de produtos
 rotas.post('/produtos', produtos.cadastrarProduto);
 rotas.get('/produtos', produtos.listarProdutos);
+rotas.get('/produtos/:id', produtos.obterProduto);
 
 module.exports = rotas;
