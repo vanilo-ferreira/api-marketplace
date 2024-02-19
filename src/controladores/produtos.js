@@ -137,7 +137,7 @@ const atualizarProduto = async (req, res) => {
     const queryAtualizacao = `update produtos set ${params.join(', ')} where id = $${n} and usuario_id = $${n + 1}`;
     const produtoAtualizado = await conexao.query(queryAtualizacao, valores);
 
-    if(produtoAtualizado.rowCount == 0){
+    if (produtoAtualizado.rowCount == 0) {
       return res.status(404).json("O produto não foi atualizado.");
     }
 
@@ -147,9 +147,34 @@ const atualizarProduto = async (req, res) => {
   }
 }
 
+const excluirProduto = async (req, res) => {
+  const { usuario } = req;
+  const { id } = req.params;
+
+  try {
+    const query = `select * from produtos where usuario_id = $1 and id = $2`;
+    const { rowCount } = await conexao.query(query, [usuario.id, id]);
+
+    if (rowCount == 0) {
+      return res.status(404).json('Produto não encontrado.');
+    }
+
+    const produtoExcluido = await conexao.query('delete from produtos where id = $1', [id]);
+
+    if (produtoExcluido.rowCount == 0) {
+      return res.status(400).json('Produto não excluído.');
+    }
+
+    return res.status(200).json('Produto excluído com sucesso!');
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+}
+
 module.exports = {
   cadastrarProduto,
   listarProdutos,
   obterProduto,
-  atualizarProduto
+  atualizarProduto,
+  excluirProduto
 }
