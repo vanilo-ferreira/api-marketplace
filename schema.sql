@@ -17,7 +17,7 @@ create table produtos(
   estoque integer not null,
   preco integer not null,
   categoria text,
-  decricao text,
+  descricao text,
   imagem text,
   foreign key (usuario_id) references usuarios(id)
 );
