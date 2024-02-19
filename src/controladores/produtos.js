@@ -56,7 +56,26 @@ const listarProdutos = async (req, res) => {
   }
 }
 
+const obterProduto = async (req, res) => {
+  const { usuario } = req;
+  const { id } = req.params;
+
+  try {
+    const query = `select * from produtos where usuario_id = $1 and id = $2`;
+    const { rows, rowCount } = await conexao.query(query, [usuario.id, id]);
+
+    if (rowCount == 0) {
+      return res.status(404).json('Produto não encontrado.');
+    }
+
+    return res.status(200).json(rows[0]);
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+}
+
 module.exports = {
   cadastrarProduto,
-  listarProdutos
+  listarProdutos,
+  obterProduto
 }
