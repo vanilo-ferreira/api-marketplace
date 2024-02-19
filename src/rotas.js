@@ -23,5 +23,6 @@ rotas.put('/perfil', usuarios.atualizarPerfil);
 rotas.post('/produtos', produtos.cadastrarProduto);
 rotas.get('/produtos', produtos.listarProdutos);
 rotas.get('/produtos/:id', produtos.obterProduto);
+rotas.put('/produtos/:id', produtos.atualizarProduto);
 
 module.exports = rotas;
