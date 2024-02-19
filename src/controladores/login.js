@@ -1,8 +1,7 @@
 const conexao = require('../conexao');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
-const senhaHash = require('../senhaHash');
+require('dotenv').config();
 
 const login = async (req, res) => {
   const { email, senha } = req.body;
@@ -32,7 +31,7 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign({id: usuario.id},
-      senhaHash,
+      process.env.SENHA_HASH,
       {expiresIn: '8h'});
 
       const {senha: _, ...dadosUsuario} = usuario;
