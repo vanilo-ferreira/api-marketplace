@@ -15,7 +15,7 @@ create table produtos(
   usuario_id integer not null,
   nome text not null,
   estoque integer not null,
-  preco integer not null,
+  preco float not null,
   categoria text,
   descricao text,
   imagem text,

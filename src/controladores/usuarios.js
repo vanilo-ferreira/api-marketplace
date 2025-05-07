@@ -1,5 +1,5 @@
-const conexao = require('../conexao');
-const bcrypt = require('bcrypt');
+const conexao = require("../conexao");
+const bcrypt = require("bcrypt");
 
 const cadastrarUsuario = async (req, res) => {
   const { nome, email, senha, nome_loja } = req.body;
@@ -21,8 +21,10 @@ const cadastrarUsuario = async (req, res) => {
   }
 
   try {
-
-    const { rowCount: quantidadeUsuarios } = await conexao.query('select * from usuarios where email = $1', [email]);
+    const { rowCount: quantidadeUsuarios } = await conexao.query(
+      "select * from usuarios where email = $1",
+      [email]
+    );
 
     if (quantidadeUsuarios > 0) {
       return res.status(400).json("O email já existe!");
@@ -30,32 +32,36 @@ const cadastrarUsuario = async (req, res) => {
 
     const senhacriptografada = await bcrypt.hash(senha, 10);
 
-    const query = 'insert  into usuarios(nome, email, senha, nome_loja) values($1, $2, $3, $4)';
-    const usuario = await conexao.query(query, [nome, email, senhacriptografada, nome_loja]);
+    const query =
+      "insert  into usuarios(nome, email, senha, nome_loja) values($1, $2, $3, $4)";
+    const usuario = await conexao.query(query, [
+      nome,
+      email,
+      senhacriptografada,
+      nome_loja,
+    ]);
 
     if (usuario.rowCount === 0) {
       return res.status(400).json("O usuário não foi cadastrado.");
     }
 
     return res.status(201).json("O usuário foi cadastrado com sucesso!");
-
-
   } catch (error) {
     return res.status(400).json(error.message);
   }
-
-
-}
+};
 
 const obterPerfil = async (req, res) => {
   return res.status(200).json(req.usuario);
-}
+};
 
 const atualizarPerfil = async (req, res) => {
   const { nome, email, senha, nome_loja } = req.body;
 
   if (!nome && !email && !senha && !nome_loja) {
-    return res.status(404).json("É obrigatório informar ao menos 1 campo para atualização!");
+    return res
+      .status(404)
+      .json("É obrigatório informar ao menos 1 campo para atualização!");
   }
 
   try {
@@ -71,7 +77,10 @@ const atualizarPerfil = async (req, res) => {
 
     if (email) {
       if (email != req.usuario.email) {
-        const { rowCount: quantidadeUsuarios } = await conexao.query('select * from usuarios where email = $1', [email]);
+        const { rowCount: quantidadeUsuarios } = await conexao.query(
+          "select * from usuarios where email = $1",
+          [email]
+        );
 
         if (quantidadeUsuarios > 0) {
           return res.status(400).json("O email já existe!");
@@ -99,7 +108,7 @@ const atualizarPerfil = async (req, res) => {
 
     valores.push(req.usuario.id);
 
-    const query = `update usuarios set ${params.join(', ')} where id = $${n}`;
+    const query = `update usuarios set ${params.join(", ")} where id = $${n}`;
 
     const usuarioAtualizado = await conexao.query(query, valores);
 
@@ -108,14 +117,13 @@ const atualizarPerfil = async (req, res) => {
     }
 
     return res.status(200).json("O usuário foi atualizado com sucesso!");
-
   } catch (error) {
     return res.status(400).json(error.message);
   }
-}
+};
 
 module.exports = {
   cadastrarUsuario,
   obterPerfil,
-  atualizarPerfil
-}
+  atualizarPerfil,
+};
